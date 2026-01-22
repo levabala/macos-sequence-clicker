@@ -1,0 +1,1436 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Action": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ClickAction"
+        },
+        {
+          "$ref": "#/definitions/KeypressAction"
+        }
+      ]
+    },
+    "CheckPermissionsRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "checkPermissions"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "type": "object"
+    },
+    "ClickAction": {
+      "properties": {
+        "button": {
+          "enum": [
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/definitions/Point"
+        },
+        "type": {
+          "enum": [
+            "click"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "button",
+        "position",
+        "type"
+      ],
+      "type": "object"
+    },
+    "DelayTransition": {
+      "properties": {
+        "ms": {
+          "type": "number"
+        },
+        "type": {
+          "enum": [
+            "delay"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "ms",
+        "type"
+      ],
+      "type": "object"
+    },
+    "ExecuteClickRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "executeClick"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "button": {
+              "enum": [
+                "left",
+                "right"
+              ],
+              "type": "string"
+            },
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "required": [
+            "button",
+            "position"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "ExecuteKeypressRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "executeKeypress"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "modifiers": {
+              "items": {
+                "enum": [
+                  "alt",
+                  "cmd",
+                  "ctrl",
+                  "shift"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "key",
+            "modifiers"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "GetPixelColorRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "getPixelColor"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "required": [
+            "position"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "HideMagnifierRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "hideMagnifier"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "type": "object"
+    },
+    "HideRecorderOverlayRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "hideRecorderOverlay"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "type": "object"
+    },
+    "IPCEvent": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/OverlayIconClickedEvent"
+        },
+        {
+          "$ref": "#/definitions/MouseClickedEvent"
+        },
+        {
+          "$ref": "#/definitions/KeyPressedEvent"
+        },
+        {
+          "$ref": "#/definitions/ZoneSelectedEvent"
+        },
+        {
+          "$ref": "#/definitions/PixelSelectedEvent"
+        },
+        {
+          "$ref": "#/definitions/OverlayMovedEvent"
+        },
+        {
+          "$ref": "#/definitions/OverlayClosedEvent"
+        },
+        {
+          "$ref": "#/definitions/TimeInputCompletedEvent"
+        }
+      ]
+    },
+    "IPCMessage": {
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/CheckPermissionsRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ShowRecorderOverlayRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/HideRecorderOverlayRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/SetRecorderStateRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ShowMagnifierRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/HideMagnifierRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ExecuteClickRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ExecuteKeypressRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/GetPixelColorRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/WaitForPixelStateRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/WaitForPixelZoneRequest"
+            }
+          ]
+        },
+        {
+          "$ref": "#/definitions/IPCResponseError"
+        },
+        {
+          "$ref": "#/definitions/OverlayIconClickedEvent"
+        },
+        {
+          "$ref": "#/definitions/MouseClickedEvent"
+        },
+        {
+          "$ref": "#/definitions/KeyPressedEvent"
+        },
+        {
+          "$ref": "#/definitions/ZoneSelectedEvent"
+        },
+        {
+          "$ref": "#/definitions/PixelSelectedEvent"
+        },
+        {
+          "$ref": "#/definitions/OverlayMovedEvent"
+        },
+        {
+          "$ref": "#/definitions/OverlayClosedEvent"
+        },
+        {
+          "$ref": "#/definitions/TimeInputCompletedEvent"
+        },
+        {
+          "$ref": "#/definitions/IPCResponseSuccess<unknown>"
+        }
+      ]
+    },
+    "IPCRequest": {
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/CheckPermissionsRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ShowRecorderOverlayRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/HideRecorderOverlayRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/SetRecorderStateRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ShowMagnifierRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/HideMagnifierRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ExecuteClickRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/ExecuteKeypressRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/GetPixelColorRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/WaitForPixelStateRequest"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            {
+              "$ref": "#/definitions/WaitForPixelZoneRequest"
+            }
+          ]
+        }
+      ]
+    },
+    "IPCRequestBody": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CheckPermissionsRequest"
+        },
+        {
+          "$ref": "#/definitions/ShowRecorderOverlayRequest"
+        },
+        {
+          "$ref": "#/definitions/HideRecorderOverlayRequest"
+        },
+        {
+          "$ref": "#/definitions/SetRecorderStateRequest"
+        },
+        {
+          "$ref": "#/definitions/ShowMagnifierRequest"
+        },
+        {
+          "$ref": "#/definitions/HideMagnifierRequest"
+        },
+        {
+          "$ref": "#/definitions/ExecuteClickRequest"
+        },
+        {
+          "$ref": "#/definitions/ExecuteKeypressRequest"
+        },
+        {
+          "$ref": "#/definitions/GetPixelColorRequest"
+        },
+        {
+          "$ref": "#/definitions/WaitForPixelStateRequest"
+        },
+        {
+          "$ref": "#/definitions/WaitForPixelZoneRequest"
+        }
+      ]
+    },
+    "IPCResponse": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/IPCResponseError"
+        },
+        {
+          "$ref": "#/definitions/IPCResponseSuccess<T>_1"
+        }
+      ]
+    },
+    "IPCResponseError": {
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "success": {
+          "enum": [
+            false
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "error",
+        "id",
+        "success"
+      ],
+      "type": "object"
+    },
+    "IPCResponseSuccess": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/T"
+        },
+        "success": {
+          "enum": [
+            true
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "result",
+        "success"
+      ],
+      "type": "object"
+    },
+    "IPCResponseSuccess<T>_1": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "result": {
+          "$ref": "#/definitions/T_1"
+        },
+        "success": {
+          "enum": [
+            true
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "result",
+        "success"
+      ],
+      "type": "object"
+    },
+    "IPCResponseSuccess<unknown>": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "result": {},
+        "success": {
+          "enum": [
+            true
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "result",
+        "success"
+      ],
+      "type": "object"
+    },
+    "KeyPressedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "modifiers": {
+              "items": {
+                "enum": [
+                  "alt",
+                  "cmd",
+                  "ctrl",
+                  "shift"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "key",
+            "modifiers"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "keyPressed"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "KeypressAction": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "modifiers": {
+          "items": {
+            "enum": [
+              "alt",
+              "cmd",
+              "ctrl",
+              "shift"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "keypress"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "modifiers",
+        "type"
+      ],
+      "type": "object"
+    },
+    "MouseClickedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "button": {
+              "enum": [
+                "left",
+                "right"
+              ],
+              "type": "string"
+            },
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "required": [
+            "button",
+            "position"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "mouseClicked"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "OverlayClosedEvent": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Record<string,never>"
+        },
+        "event": {
+          "enum": [
+            "overlayClosed"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "OverlayIconClickedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "icon": {
+              "enum": [
+                "action",
+                "keyboard",
+                "mouse",
+                "time",
+                "transition"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "icon"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "overlayIconClicked"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "OverlayMovedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "required": [
+            "position"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "overlayMoved"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "PermissionStatus": {
+      "properties": {
+        "accessibility": {
+          "type": "boolean"
+        },
+        "screenRecording": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "accessibility",
+        "screenRecording"
+      ],
+      "type": "object"
+    },
+    "PixelColorResult": {
+      "properties": {
+        "color": {
+          "$ref": "#/definitions/RGB"
+        }
+      },
+      "required": [
+        "color"
+      ],
+      "type": "object"
+    },
+    "PixelSelectedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/RGB"
+            },
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "required": [
+            "color",
+            "position"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "pixelSelected"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "PixelStateTransition": {
+      "properties": {
+        "color": {
+          "$ref": "#/definitions/RGB"
+        },
+        "position": {
+          "$ref": "#/definitions/Point"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "type": {
+          "enum": [
+            "pixel-state"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "color",
+        "position",
+        "threshold",
+        "type"
+      ],
+      "type": "object"
+    },
+    "PixelZoneTransition": {
+      "properties": {
+        "color": {
+          "$ref": "#/definitions/RGB"
+        },
+        "rect": {
+          "$ref": "#/definitions/Rect"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "type": {
+          "enum": [
+            "pixel-zone"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "color",
+        "rect",
+        "threshold",
+        "type"
+      ],
+      "type": "object"
+    },
+    "Point": {
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x",
+        "y"
+      ],
+      "type": "object"
+    },
+    "RGB": {
+      "properties": {
+        "b": {
+          "type": "number"
+        },
+        "g": {
+          "type": "number"
+        },
+        "r": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "b",
+        "g",
+        "r"
+      ],
+      "type": "object"
+    },
+    "Record<string,never>": {
+      "type": "object"
+    },
+    "Rect": {
+      "properties": {
+        "height": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "height",
+        "width",
+        "x",
+        "y"
+      ],
+      "type": "object"
+    },
+    "Scenario": {
+      "properties": {
+        "createdAt": {
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastUsedAt": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/definitions/Step"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "createdAt",
+        "id",
+        "lastUsedAt",
+        "name",
+        "steps"
+      ],
+      "type": "object"
+    },
+    "ScenarioRef": {
+      "properties": {
+        "scenarioId": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "scenario-ref"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "scenarioId",
+        "type"
+      ],
+      "type": "object"
+    },
+    "SetRecorderStateRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "setRecorderState"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "state": {
+              "enum": [
+                "action",
+                "idle",
+                "transition"
+              ],
+              "type": "string"
+            },
+            "subState": {
+              "enum": [
+                "keyboard",
+                "mouse",
+                "pixel",
+                "time"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "ShowMagnifierRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "showMagnifier"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "method"
+      ],
+      "type": "object"
+    },
+    "ShowRecorderOverlayRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "showRecorderOverlay"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "position": {
+              "$ref": "#/definitions/Point"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "Step": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ClickAction"
+        },
+        {
+          "$ref": "#/definitions/KeypressAction"
+        },
+        {
+          "$ref": "#/definitions/DelayTransition"
+        },
+        {
+          "$ref": "#/definitions/PixelStateTransition"
+        },
+        {
+          "$ref": "#/definitions/PixelZoneTransition"
+        },
+        {
+          "$ref": "#/definitions/ScenarioRef"
+        }
+      ]
+    },
+    "T": {
+      "type": "object"
+    },
+    "T_1": {
+      "type": "object"
+    },
+    "TimeInputCompletedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "ms": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "ms"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "timeInputCompleted"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    },
+    "Transition": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DelayTransition"
+        },
+        {
+          "$ref": "#/definitions/PixelStateTransition"
+        },
+        {
+          "$ref": "#/definitions/PixelZoneTransition"
+        }
+      ]
+    },
+    "WaitForPixelStateRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "waitForPixelState"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/RGB"
+            },
+            "position": {
+              "$ref": "#/definitions/Point"
+            },
+            "threshold": {
+              "type": "number"
+            },
+            "timeoutMs": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "color",
+            "position",
+            "threshold"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "WaitForPixelZoneRequest": {
+      "properties": {
+        "method": {
+          "enum": [
+            "waitForPixelZone"
+          ],
+          "type": "string"
+        },
+        "params": {
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/RGB"
+            },
+            "rect": {
+              "$ref": "#/definitions/Rect"
+            },
+            "threshold": {
+              "type": "number"
+            },
+            "timeoutMs": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "color",
+            "rect",
+            "threshold"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "method",
+        "params"
+      ],
+      "type": "object"
+    },
+    "ZoneSelectedEvent": {
+      "properties": {
+        "data": {
+          "properties": {
+            "rect": {
+              "$ref": "#/definitions/Rect"
+            }
+          },
+          "required": [
+            "rect"
+          ],
+          "type": "object"
+        },
+        "event": {
+          "enum": [
+            "zoneSelected"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "event"
+      ],
+      "type": "object"
+    }
+  }
+}
