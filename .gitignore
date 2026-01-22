@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Swift
+.build/
+.swiftpm/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+*.playground/
+
+# Bun / Node
+node_modules/
+bun.lockb
+
+# Generated files (can be regenerated with `cd schema && bun run generate`)
+# Uncomment if you want to track generated files:
+# schema/generated/
+
+# User config (may contain sensitive data)
+~/.config/macos-sequencer/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build outputs
+*.log
