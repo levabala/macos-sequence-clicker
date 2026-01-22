@@ -255,6 +255,14 @@ Modifiers must be set in both:
 ### 6. Global Event Monitoring
 `NSEvent.addGlobalMonitorForEvents()` requires Accessibility permission. Also need `addLocalMonitorForEvents` for events in own windows.
 
+### 7. AppleScript String Escaping
+When interpolating strings into AppleScript (e.g., for `do script`), escape backslashes and double quotes:
+```swift
+let escaped = string
+    .replacingOccurrences(of: "\\", with: "\\\\")
+    .replacingOccurrences(of: "\"", with: "\\\"")
+```
+
 ## Data Persistence
 
 Files stored in `~/.config/macos-sequencer/` (overridable via `SEQUENCER_CONFIG_DIR` env var):

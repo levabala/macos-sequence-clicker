@@ -26,11 +26,14 @@ class TerminalManager {
         let controllerPath = "\(projectRoot)/controller"
         let command = "cd \"\(controllerPath)\" && SEQUENCER_CONFIG_DIR=\"\(configDir)\" bun run start"
         
+        // Escape the command for use in AppleScript string
+        let escapedCommand = escapeForAppleScript(command)
+        
         // AppleScript to open Terminal and run command
         let script = """
         tell application "Terminal"
             activate
-            set newWindow to do script "\(command)"
+            set newWindow to do script "\(escapedCommand)"
             delay 0.5
             set windowId to id of front window
             return windowId
@@ -153,6 +156,13 @@ class TerminalManager {
     }
     
     // MARK: - Private Helpers
+    
+    /// Escape a string for use inside AppleScript double-quoted strings
+    private func escapeForAppleScript(_ string: String) -> String {
+        return string
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+    }
     
     private func runAppleScript(_ script: String) throws -> Int? {
         var error: NSDictionary?
