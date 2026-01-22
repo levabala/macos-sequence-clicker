@@ -48,6 +48,7 @@ struct RecorderOverlayView: View {
                 activeColor: .red
             )
             .onTapGesture {
+                Logger.log("UI", "Action indicator tapped, current state: \(state)")
                 if state != .action {
                     onIconClick(.action)
                 }
@@ -61,6 +62,7 @@ struct RecorderOverlayView: View {
                 activeColor: .orange
             )
             .onTapGesture {
+                Logger.log("UI", "Transition indicator tapped, current state: \(state)")
                 if state != .transition {
                     onIconClick(.transition)
                 }
@@ -107,7 +109,10 @@ struct RecorderOverlayView: View {
     // MARK: - Close Button
     
     private var closeButton: some View {
-        Button(action: onClose) {
+        Button(action: {
+            Logger.log("UI", "Close button clicked")
+            onClose()
+        }) {
             Image(systemName: "xmark.circle.fill")
                 .font(.system(size: 20))
                 .foregroundColor(.white.opacity(0.7))
@@ -210,6 +215,7 @@ private struct IconButton: View {
     
     var body: some View {
         Button(action: {
+            Logger.log("UI", "IconButton '\(label)' clicked, isDisabled: \(isDisabled)")
             if !isDisabled {
                 action()
             }

@@ -19,37 +19,51 @@ actor IPCHandler {
         self.mouseController = MouseController()
         self.keyboardController = KeyboardController()
         self.screenCapture = ScreenCapture()
+        Logger.log("IPC", "IPCHandler initialized")
     }
     
     /// Main message processing loop
     func run() async {
+        Logger.log("IPC", "IPCHandler.run() starting")
+        
         // Setup overlay event callback (must be done on main thread)
         await MainActor.run {
+            Logger.log("IPC", "Setting up overlay event callback on main thread")
             OverlayWindowController.shared.onEvent = { [weak self] event in
+                Logger.log("IPC", "onEvent callback invoked with event type: \(type(of: event))")
                 await self?.sendEvent(event)
             }
+            Logger.log("IPC", "Overlay event callback set")
         }
         
+        Logger.log("IPC", "Entering main message loop")
         while true {
             do {
                 guard let line = try await reader.readLine() else {
                     // EOF - clean exit
+                    Logger.log("IPC", "EOF received, exiting message loop")
                     break
                 }
                 
+                Logger.log("IPC", "Received message: \(line.prefix(200))...")
                 await processMessage(line)
             } catch {
                 // Log error but continue processing
+                Logger.log("IPC", "Error reading stdin: \(error)")
                 await logError("Error reading stdin: \(error)")
             }
         }
+        Logger.log("IPC", "Message loop ended")
     }
     
     /// Send an event to stdout (for unsolicited events from UI)
     private func sendEvent(_ event: Encodable) async {
+        Logger.log("IPC", "sendEvent called with type: \(type(of: event))")
         do {
             try await writer.writeEvent(event)
+            Logger.log("IPC", "Event written successfully")
         } catch {
+            Logger.log("IPC", "Failed to write event: \(error)")
             await logError("Failed to write event: \(error)")
         }
     }
@@ -81,6 +95,7 @@ actor IPCHandler {
     
     /// Route request to appropriate handler
     private func handleRequest(method: IPCRequestMethod, id: String, data: Data) async {
+        Logger.log("IPC", "handleRequest: method=\(method), id=\(id)")
         do {
             switch method {
             case .checkPermissions:

@@ -60,6 +60,17 @@ macos-sequence-clicker/
 │       ├── UI/                # Overlay windows, magnifier, zone selector
 │       └── Permissions/       # Accessibility, screen recording checks
 │
+├── e2e-tester/                # E2E testing framework (Swift)
+│   └── Sources/
+│       ├── main.swift         # CLI entry point
+│       ├── Core/              # TestRunner, TestCase, TestContext
+│       ├── Terminal/          # AppleScript Terminal.app control
+│       ├── Input/             # CGEvent keyboard/mouse simulation
+│       ├── Overlay/           # Window discovery, button positions
+│       ├── Config/            # Read/write scenarios.json
+│       ├── Assertions/        # Test assertion helpers
+│       └── Tests/             # Test implementations
+│
 └── docs/                      # Full documentation
     └── build-phases/          # Implementation phases with detailed notes
 ```
@@ -200,6 +211,18 @@ cd schema && bun run generate
 
 # Verify Swift types compile
 swiftc -typecheck schema/generated/Types.swift
+
+# Build E2E tester
+cd e2e-tester && swift build -c release
+
+# Run E2E tests
+cd e2e-tester && .build/release/E2ETester
+
+# Run specific E2E test
+cd e2e-tester && .build/release/E2ETester --test recordAndExecuteScenario
+
+# List available E2E tests
+cd e2e-tester && .build/release/E2ETester --list
 ```
 
 ## Permission Requirements
@@ -234,11 +257,19 @@ Modifiers must be set in both:
 
 ## Data Persistence
 
-Files stored in `~/.config/macos-sequencer/`:
+Files stored in `~/.config/macos-sequencer/` (overridable via `SEQUENCER_CONFIG_DIR` env var):
 - `scenarios.json` - Saved scenarios (auto-saved on mutation)
 - `settings.json` - User preferences
 
+**Config Override:**
+```bash
+# Use custom config directory (useful for testing)
+SEQUENCER_CONFIG_DIR=/tmp/test-config bun run start
+```
+
 ## Testing
+
+### Unit Testing (Swift Helper)
 
 ```bash
 # Test Swift helper directly
@@ -250,6 +281,36 @@ echo '{"id":"1","method":"executeClick","params":{"position":{"x":100,"y":100},"
 # Test pixel color
 echo '{"id":"1","method":"getPixelColor","params":{"position":{"x":100,"y":100}}}' | .build/release/SequencerHelper
 ```
+
+### E2E Testing
+
+The E2E tester automates full workflows by:
+1. Launching Terminal.app with the controller
+2. Sending keypresses/clicks to test UI interactions
+3. Detecting and interacting with the recorder overlay
+4. Verifying results by reading config files
+
+**Build and run:**
+```bash
+cd e2e-tester
+swift build -c release
+.build/release/E2ETester
+```
+
+**Key features:**
+- **Test isolation** - Each test uses a unique temp config directory via `SEQUENCER_CONFIG_DIR`
+- **Serial execution** - Tests run one at a time for predictable results
+- **Overlay detection** - Uses `CGWindowListCopyWindowInfo` to find and click overlay buttons
+- **Result verification** - Reads `scenarios.json` to verify scenarios were recorded/executed
+
+**Permissions required:**
+- Accessibility permission (for sending keypresses/clicks)
+- Grant to Terminal.app or the E2ETester binary
+
+**Available tests:**
+- `recordAndExecuteScenario` - E2E: Create scenario, record a click, execute it, verify
+
+See `e2e-tester/README.md` for full documentation.
 
 ## File Reference by Feature
 
@@ -263,6 +324,7 @@ echo '{"id":"1","method":"getPixelColor","params":{"position":{"x":100,"y":100}}
 | Recording | `hooks/useRecording.ts` | `UI/*.swift` |
 | Execution | `execution/executor.ts` | `Actions/*.swift` |
 | Permissions | - | `Permissions/PermissionChecker.swift` |
+| E2E Testing | - | `e2e-tester/Sources/**/*.swift` |
 
 ## Documentation
 
@@ -274,3 +336,8 @@ Full documentation available in `docs/`:
 - `PART_05_UI.md` - Terminal UI
 - `PART_06_SWIFT_UI.md` - Swift overlay UI
 - `build-phases/README.md` - Implementation phases with detailed notes
+
+## Rules
+
+When asked for any change - add the following final TODO item: "Update AGENTS.md with any important info"
+When asked for a non-trivial change - add the following final TODO item: "commit&push"

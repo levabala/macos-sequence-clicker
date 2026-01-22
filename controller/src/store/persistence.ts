@@ -5,7 +5,9 @@ import { homedir } from "os";
 import { join } from "path";
 import type { Scenario, Point } from "../types";
 
-const CONFIG_DIR = join(homedir(), ".config", "macos-sequencer");
+// Allow override via environment variable for testing
+const CONFIG_DIR = process.env.SEQUENCER_CONFIG_DIR ?? 
+  join(homedir(), ".config", "macos-sequencer");
 const SCENARIOS_FILE = "scenarios.json";
 const SETTINGS_FILE = "settings.json";
 

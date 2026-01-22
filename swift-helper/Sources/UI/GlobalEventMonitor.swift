@@ -17,35 +17,46 @@ class GlobalEventMonitor {
     init(mask: NSEvent.EventTypeMask, handler: @escaping (NSEvent) -> Void) {
         self.mask = mask
         self.handler = handler
+        Logger.log("EventMonitor", "Initialized with mask: \(mask)")
     }
     
     deinit {
+        Logger.log("EventMonitor", "Deinitializing")
         stop()
     }
     
     /// Start monitoring events globally
     func start() {
+        Logger.log("EventMonitor", "Starting monitors for mask: \(mask)")
+        
         // Monitor events in other applications (requires Accessibility permission)
         globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: mask) { [weak self] event in
+            Logger.log("EventMonitor", "Global event received: type=\(event.type.rawValue), location=\(event.locationInWindow)")
             self?.handler(event)
         }
+        Logger.log("EventMonitor", "Global monitor registered: \(globalMonitor != nil)")
         
         // Also monitor events in our own windows (for local clicks)
         localMonitor = NSEvent.addLocalMonitorForEvents(matching: mask) { [weak self] event in
+            Logger.log("EventMonitor", "Local event received: type=\(event.type.rawValue), location=\(event.locationInWindow), window=\(event.window?.title ?? "nil")")
             self?.handler(event)
             return event // Pass event through
         }
+        Logger.log("EventMonitor", "Local monitor registered: \(localMonitor != nil)")
     }
     
     /// Stop monitoring events
     func stop() {
+        Logger.log("EventMonitor", "Stopping monitors")
         if let monitor = globalMonitor {
             NSEvent.removeMonitor(monitor)
             globalMonitor = nil
+            Logger.log("EventMonitor", "Global monitor removed")
         }
         if let monitor = localMonitor {
             NSEvent.removeMonitor(monitor)
             localMonitor = nil
+            Logger.log("EventMonitor", "Local monitor removed")
         }
     }
 }
